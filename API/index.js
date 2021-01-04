@@ -10,6 +10,8 @@ const port = 5000;
 const mongoose = require('mongoose')
 const authRoute = require('./routes/auth');
 const petRoute = require('./routes/pets');
+const EditPetRoute = require('./routes/EditPet');
+const DeletePetRoute = require('./routes/DeletePet');
 
 require("dotenv").config();
 
@@ -32,5 +34,8 @@ mongoose.connect(
 
   app.use('/api/user', authRoute);
   app.use('/api/pets', petRoute);
+  app.use('/api/EditPet', EditPetRoute);
+  app.use('/api/DeletePet', DeletePetRoute);
+  
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

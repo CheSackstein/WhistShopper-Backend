@@ -10,8 +10,8 @@ async function run() {
     const pets_collection = db.collection("pets");
  
     let petDocument = {
-      type: "schnauzer",
-      name: "Fluffy",
+      type: "Golden Retreiver",
+      name: "Goldy",
       status: "Adopted",
       picture: "url123",
       height: "12cm",
