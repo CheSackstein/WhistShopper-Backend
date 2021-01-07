@@ -3,7 +3,7 @@ const User = require("../Model/User");
 var app = express();
 const router = require("express").Router();
 const verify = require("./verifyToken");
-const dbName = "pets";
+const dbName = "users";
 const fs = require("fs");
 const multer = require("multer");
 const path = require("path");
@@ -25,25 +25,16 @@ const uri =
   "mongodb+srv://Che:Cheche2012@cluster0.mox7t.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true });
 client.connect((err) => {
-  const collection = client.db("users").collection("users");
+  const collection = client.db("users").collection("pets");
   // perform actions on the collection object
   //client.close();
 });
 
 let pets = [];
+let pet ={};
 let imageFile;
 let petDocument = {
-  type: "Golden Retreiver",
-  name: "Goldy",
-  status: "Adopted",
-  picture: "url123",
-  height: "12cm",
-  weight: "10kgs",
-  color: "Grey",
-  bio: "Super cute, friendly and woofs along to any love song",
-  hypoAllergenic: "Yes",
-  restrictions: "None",
-  breed: "Schnauzer",
+  
 };
 
 app.use(cors());
@@ -69,10 +60,22 @@ router.post("/upload",(req, res, next) => {
   
 
 });
+
+router.get("/",  (req, res) => {
+ 
+  //res.json(pet);
+  //console.log(pet)
+//petDocument=pet;
+console.log('HI')
+Display().catch(console.dir);
+//console.log(Display())
+res.json(pets);
+});
+
 router.post("/",  (req, res, next) => {
 
   //const imagePath = `../images${req.file}`;
-  const pet = {
+  pet = {
     type: req.body.type,
     name: req.body.name,
     status: req.body.status,
@@ -87,20 +90,17 @@ router.post("/",  (req, res, next) => {
   };
   pets.push(pet);
   res.status(201).json();
+  Insert().catch(console.dir);
 });
 
-router.get("/",  (req, res) => {
-  res.json(pets);
 
- 
-});
 
 router.get("/json", (req, res) => {
   res.sendFile(path.join(`${__dirname}/images.json`));
 });
 
 
-async function run() {
+async function Insert() {
   try {
     await client.connect();
     console.log("Connected correctly to server");
@@ -109,14 +109,41 @@ async function run() {
 
     const pets_collection = db.collection("pets");
 
-    newUserDB = await pets_collection.insertOne(petDocument);
+    newUserDB = await pets_collection.insertOne(pet);
     console.log(newUserDB);
+
+  
+
   } catch (err) {
     console.log(err.stack);
   } finally {
-    await client.close();
   }
 }
 
-run().catch(console.dir);
+async function Display() {
+
+  try {
+    await client.connect();
+    console.log("Connected correctly to server");
+    const db = client.db(dbName);
+
+    // Use the collection named "users"
+    const pets_collection = db.collection("pets");
+
+    // Get all users
+    all_db_pets = await pets_collection.find();
+
+    // Print each user to the console
+   //let pets = [];
+    all_db_pets.forEach((pet) => 
+    pets.push(pet));
+    all_db_pets.forEach((pet) => 
+    console.log(pet));
+  } catch (err) {
+    console.log(err.stack);
+  } finally {
+   
+  }
+ 
+} 
 module.exports = router;

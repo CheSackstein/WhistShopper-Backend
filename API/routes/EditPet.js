@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== "production") {
 app.use(cors());
 
 const MongoClient = require('mongodb').MongoClient;
+const { ObjectId } = require("mongodb");
 const uri = "mongodb+srv://Che:Cheche2012@cluster0.mox7t.mongodb.net/users?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true });
 client.connect(err => {
@@ -42,7 +43,7 @@ console.log('hi')
     
    let updated_pet = await pets_collection.updateOne(
         {
-          _id: ObjectID("5ff222694f9b095ba0232b32"),
+          _id: ObjectId("5ff222694f9b095ba0232b32"),
         },
         { $set: { name: "enaJ" } }
       );

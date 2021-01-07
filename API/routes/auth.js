@@ -20,7 +20,6 @@ if (process.env.NODE_ENV !== "production") {
 router.post('/register',async (req,res) => {
 
 //Validation
-
 const { error }= registerValidation(req.body);
 
 if (error){

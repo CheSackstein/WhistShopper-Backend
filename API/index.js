@@ -12,7 +12,8 @@ const authRoute = require('./routes/auth');
 const petRoute = require('./routes/pets');
 const EditPetRoute = require('./routes/EditPet');
 const DeletePetRoute = require('./routes/DeletePet');
-
+const usersRoute = require('./routes/users')
+const getPetsRoute = require('./routes/getPets')
 require("dotenv").config();
 
 mongoose.connect(
@@ -36,6 +37,8 @@ mongoose.connect(
   app.use('/api/pets', petRoute);
   app.use('/api/EditPet', EditPetRoute);
   app.use('/api/DeletePet', DeletePetRoute);
+  app.use('/api/users', usersRoute);
+  app.use('/api/getPets', getPetsRoute);
   
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
