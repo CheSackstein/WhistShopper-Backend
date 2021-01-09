@@ -20,27 +20,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
+let pets = [];
+let pet = {};
+let imageFile;
+let petDocument = {};
+
+app.use(cors());
+
 const MongoClient = require("mongodb").MongoClient;
 const uri =
   "mongodb+srv://Che:Cheche2012@cluster0.mox7t.mongodb.net/users?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true });
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 client.connect((err) => {
   const collection = client.db("users").collection("pets");
   // perform actions on the collection object
   //client.close();
 });
 
-let pets = [];
-let pet ={};
-let imageFile;
-let petDocument = {
-  
-};
-
-app.use(cors());
-
 const storage = multer.diskStorage({
-  destination: '/uploads',
+  destination: "/uploads",
   filename: (req, file, cb) => {
     cb(
       null,
@@ -49,31 +50,17 @@ const storage = multer.diskStorage({
   },
 });
 
-router.post("/upload",(req, res, next) => {
-  imagesJSON.push({ imageFile: req.file.filename});
+router.post("/upload", (req, res, next) => {
+  imagesJSON.push({ imageFile: req.file.filename });
   const data = JSON.stringify(imagesJSON, null, 2);
- imageFile = req.file.filename;
+  imageFile = req.file.filename;
   fs.writeFile("../images.json", data, function (err) {
     console.log("Saved!");
   });
   console.log(req.file);
-  
-
 });
 
-router.get("/",  (req, res) => {
- 
-  //res.json(pet);
-  //console.log(pet)
-//petDocument=pet;
-console.log('HI')
-Display().catch(console.dir);
-//console.log(Display())
-res.json(pets);
-});
-
-router.post("/",  (req, res, next) => {
-
+router.post("/", (req, res, next) => {
   //const imagePath = `../images${req.file}`;
   pet = {
     type: req.body.type,
@@ -90,15 +77,18 @@ router.post("/",  (req, res, next) => {
   };
   pets.push(pet);
   res.status(201).json();
+
   Insert().catch(console.dir);
+  client.close();
 });
 
-
-
-router.get("/json", (req, res) => {
-  res.sendFile(path.join(`${__dirname}/images.json`));
+router.get("/", async (req, res) => {
+  res.json(pets);
 });
 
+// router.get("/json", (req, res) => {
+//   res.sendFile(path.join(`${__dirname}/images.json`));
+// });
 
 async function Insert() {
   try {
@@ -106,22 +96,22 @@ async function Insert() {
     console.log("Connected correctly to server");
     const db = client.db(dbName);
 
-
     const pets_collection = db.collection("pets");
 
     newUserDB = await pets_collection.insertOne(pet);
-    console.log(newUserDB);
+    pets.push(pet);
+    all_db_pets = await pets_collection.find();
 
-  
-
+    // Print each user to the console
+    all_db_pets.forEach((pet) => res.json(pet));
   } catch (err) {
     console.log(err.stack);
   } finally {
+    client.close();
   }
 }
 
 async function Display() {
-
   try {
     await client.connect();
     console.log("Connected correctly to server");
@@ -131,19 +121,13 @@ async function Display() {
     const pets_collection = db.collection("pets");
 
     // Get all users
-    all_db_pets = await pets_collection.find();
 
-    // Print each user to the console
-   //let pets = [];
-    all_db_pets.forEach((pet) => 
-    pets.push(pet));
-    all_db_pets.forEach((pet) => 
-    console.log(pet));
+    client.close();
   } catch (err) {
     console.log(err.stack);
   } finally {
-   
+    client.close();
   }
- 
-} 
+}
+
 module.exports = router;
