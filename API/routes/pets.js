@@ -79,13 +79,41 @@ router.post("/", (req, res, next) => {
   res.status(201).json();
 
   Insert().catch(console.dir);
-  client.close();
 });
 
 router.get("/", async (req, res) => {
+  console.log("Connected correctly to server");
+  const db = client.db(dbName);
+
+  const pets_collection = db.collection("pets");
+
+  all_db_pets = await pets_collection.find();
+
+  // Print each user to the console
+  all_db_pets.forEach((pet) => pets.push(pet));
+
   res.json(pets);
 });
-
+router.get("/SearchPage", async (req, res) => {
+  try {
+    let filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.height) filter.height = parseInt(req.query.height);
+    if (req.query.weight) filter.weight = parseInt(req.query.weight);
+    if (req.query.type) filter.type = req.query.type;
+    if (req.query.name) filter.name = req.query.name;
+    console.log(filter);
+    let pets = await Pet.find(filter);
+    console.log("pet", pets);
+    if (pets.length === 0) {
+      return res.status(404).send({ err: `No pets found, try again ` });
+    }
+    res.json(pets);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
 // router.get("/json", (req, res) => {
 //   res.sendFile(path.join(`${__dirname}/images.json`));
 // });
