@@ -6,6 +6,8 @@
   "repository": "https://github.com/israeltechchallenge/pet-adoption-back-end-CheSackstein.git",
   "author": "CheSackstein <chesackstein@gmail.com>",
   "license": "MIT",
+  "scripts":{
+    "start":"nodemon index.js"},
   "dependencies": {
     "@hapi/joi": "15.0.3",
     "bcrypt": "^5.0.0",

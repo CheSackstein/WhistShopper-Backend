@@ -30,13 +30,13 @@ app.use(express.json());
 //    .catch(err => console.log(error));
 //  });
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://Che:Cheche2012@cluster0.mox7t.mongodb.net/smaple_airbnb?retryWrites=true&w=majority";
+const uri =  "mongodb+srv://Che:Cheche2012@cluster0.mox7t.mongodb.net/pets?retryWrites=true&w=majority&tls=true";
 const client = new MongoClient(uri, { useUnifiedTopology: true, useNewUrlParser: true });
 client.connect(err => {
-  const collection = client.db("test").collection("listingsAndReviews");
+  const collection = client.db("pets").collection("users");
   // perform actions on the collection object
   console.log(collection)
-  client.close();
+ // client.close();
 }); 
 
 function getAllFuncs(toCheck) {
@@ -53,16 +53,13 @@ function getAllFuncs(toCheck) {
 
 console.log(getAllFuncs(client));
 
-mongoose.connect("mongodb://localhost/fullstack", {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
-const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Connected to Mongoose"));
-
-
-
+// mongoose.connect("mongodb://localhost/fullstack", {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true,
+// });
+// const db = mongoose.connection;
+// db.on("error", (error) => console.error(error));
+// db.once("open", () => console.log("Connected to Mongoose"));
 
 
 
@@ -81,6 +78,8 @@ app.post("/users", (req, res, next) => {
     res.status(500).send();
   }
 });
+
+
 app.post("/users/login", async (req, res) => {
   const user = users.find((user) => user.username === req.body.name);
   if (user == null) {
@@ -99,109 +98,12 @@ app.post("/users/login", async (req, res) => {
   }
 });
 
-app.get("/users", authenticateToken, (req, res) => {
+app.get("/users", (req, res) => {
   console.log(users);
   res.json(users);
 });
 
-// app.get('/pets',authenticateToken, (req, res) => {
-//   console.log(pets)
-//   res.json(pets.filter(pets => pets.username === req.user.username));});
+app.get('/pets',(req, res) => {
+  console.log(pets)
+  res.json(pets.filter(pets => pets.username === req.user.username));});
 
-// function authenticateToken(req, res, next) {
-//   const authHeader = req.headers["authorization"];
-//   const token = authHeader && authHeader.split(" ")[1];
-//   console.log(token);
-//   if (token == null) return res.sendStatus(401);
-
-//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//     if (err) return res.sendStatus(403);
-//     req.user = user;
-//     next();
-//   });
-// }
-// app.listen(port, () => console.log(`Listening on port ${port}`));
-
-// //
-
-// // console.log that your server is up and running
-
-// // create a GET route
-// // app.get('/express_backend', (req, res) => {
-// //   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
-// // });
-
-// // app.post('/express_backend', (req, res) => {
-// //   res.json({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
-// // });
-
-// const express = require("express");
-// var multer = require("multer");
-// const path = require("path");
-// const fs = require("fs");
-// const uuid = require("uuid").v4;
-// var app = express();
-// const usersJSON = require('../users.json')
-// //const DatauriParser = require("parser");
-
-// const port = 3000;
-
-// app.use(express.static("public"));
-
-// const storage = multer.diskStorage({
-//   destination: "/users",
-
-//   filename: (req, file, cb) => {
-//     const { originalname } = file;
-//     cb(null, originalname);
-//   },
-// });
-// const upload = multer({ storage });
-// const users= [
-//   { username:'Me',
-// password:'Me'},
-// { username:'Me2',
-// password:'Me2'}
-
-// ]
-// app.get('/users', (req, res) => {
-//   res.json(users);
-//   console.log(users)
-// });
-// app.get('/login', (req, res) => {
-//   res.json(users);
-// });
-// // app.post("/upload", upload.array("avatar"), (req, res) => {
-// //   res.json({
-// //     status: "isOk",
-// //     uploaded: req.files.length,
-// //     caption: req.body.caption,
-// //     imageFile:
-// //   });
-// //   console.log(req.body.caption);
-// //   module.exports = req.body.caption;
-// // });
-
-// app.post("/gallery", upload.array("avatar"), (req, res, next) => {
-//   console.log(req.file);
-//   console.log(req.body);
-//   res.send("done");
-// });
-
-// // app.post("/express_backend", upload.single("avatar"), (req, res, next) => {
-// //   usersJSON.push({ imageFile: 'lol', caption: 'caption' });
-// //   const data = JSON.stringify(usersJSON, null, 2);
-// //   fs.writeFile("../users.json", data, function (err) {
-// //      // res.redirect("./gallery.html")
-// //       console.log('Saved!');
-// //   });
-// //   console.log(req.file);
-// //   res.send(data)
-// //   console.log(req.body);
-// //   });
-// // app.get("/json",  (req, res) => {
-// //   res.sendFile(path.join(`${__dirname}/users.json`))
-// // })
-
-// app.listen(port, () => console.log(`Listening on port ${port}`))
-// ;

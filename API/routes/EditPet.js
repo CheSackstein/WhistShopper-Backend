@@ -50,7 +50,7 @@ console.log('hi')
       console.log(updated_pet);
   
       let one_db_pet = await pets_collection.findOne({
-        _id: ObjectID("5ff222694f9b095ba0232b32"),
+        _id: ObjectId("5ff222694f9b095ba0232b32"),
       });
       console.log(one_db_pet);
   } catch (err) {

@@ -10,7 +10,7 @@ const { Schema } = require('mongoose');
 const { validate } = require('uuid');
 
 const app = express();
-require("dotenv").config({path: '../env.env'});
+require("dotenv").config({path: '../.env'});
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
   }
